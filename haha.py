@@ -1,6 +1,10 @@
 import pygame
 import sys
 
+screen=pygame.display.set_mode((1000,500))
+clock=pygame.time.Clock()
+pygame.display.set_caption("Flappy Witch")
+
 pygame.init()
 pygame.mixer.init()
 
@@ -24,7 +28,7 @@ class GameElements:
     
     def seconds():
         secs= int(pygame.time.get_ticks()/1000)
-        secs1=font3.render(f"Seconds: {secs}", False, 'darkslategray')
+        secs1=font3.render(f"Seconds: {secs}", False, 'goldenrod4')
         return secs1
     
     def cursor():
@@ -35,9 +39,9 @@ class GameElements:
     
     def exitbutton():
 
-        color_not='aquamarine4'
-        color_umm='olivedrab4'
-        color_yes='chartreuse4'
+        color_not='goldenrod3'
+        color_umm='goldenrod4'
+       
 
         button=pygame.Rect(900,450,70,30)
         color=color_umm if button.collidepoint(GameElements.mouse()) else color_not
@@ -47,23 +51,46 @@ class GameElements:
         text_rect = text_surf.get_rect(center=button.center)
         return button, text_surf, text_rect
     
-    def background():
 
-        background1=pygame.image.load('char/final.png')
-        background2=pygame.transform.scale(background1,(3000,500))
-        background=background2.get_rect(topleft=(0,0))
-        background.right-=1
-        if background.right<=1000:
-            background.left=0
 
-        return background2, background
+background1=pygame.image.load('char/final.png')
+background2=pygame.transform.scale(background1,(3000,500))
+background=background2.get_rect(topleft=(0,0))
+
+playbut1=pygame.image.load('char/play1.png').convert_alpha()
+playbut2=pygame.transform.scale(playbut1, (160,80))
+playbut3=playbut2.get_rect(topleft=(425,220))
+
+playp2=pygame.image.load('char/play2.png').convert_alpha()
+playp1=pygame.transform.scale(playp2, (160,80))
+playp=playp1.get_rect(topleft=(425,220))
+
+over2=pygame.image.load('char/gameover1.png').convert_alpha()
+over1=pygame.transform.scale(over2, (445,100))
+over=over1.get_rect(topleft=(280,200))
+
+heart12=pygame.image.load('char/heart1.png').convert_alpha()
+heart11=pygame.transform.scale(heart12, (200,50))
+heart1=heart11.get_rect(topleft=(50,5))
+
+heart22=pygame.image.load('char/heart2.png').convert_alpha()
+heart21=pygame.transform.scale(heart22, (200,50))
+heart2=heart21.get_rect(topleft=(50,5))
+
+heart32=pygame.image.load('char/heart3.png').convert_alpha()
+heart31=pygame.transform.scale(heart32, (200,50))
+heart3=heart31.get_rect(topleft=(50,5))
+
+heart42=pygame.image.load('char/heart4.png').convert_alpha()
+heart41=pygame.transform.scale(heart42, (200,50))
+heart4=heart41.get_rect(topleft=(50,5))
+
+heart52=pygame.image.load('char/heart5.png').convert_alpha()
+heart51=pygame.transform.scale(heart52, (200,50))
+heart5=heart51.get_rect(topleft=(50,5))
 
 
 GameElements.bgmusic()
-
-screen=pygame.display.set_mode((1000,500))
-clock=pygame.time.Clock()
-pygame.display.set_caption("Flappy Witch")
 
 mousepos=pygame.mouse.get_pos()
 mx,my=mousepos
@@ -73,7 +100,7 @@ collided_last_frame=False
 
 witch1=pygame.image.load('char/witch.png').convert_alpha()
 witch2=pygame.transform.scale(witch1, (55,55))
-witch=witch2.get_rect(topleft=(100,350))
+witch=witch2.get_rect(topleft=(-55,350))
 
 pillarup=pygame.image.load('char/uppipe.png').convert_alpha()
 pillarup1=pygame.transform.scale(pillarup, (30,300))
@@ -96,91 +123,122 @@ font=pygame.font.Font('font/yoster.ttf', 20)
 font1=pygame.font.Font('font/yoster.ttf', 50)
 font3=pygame.font.Font('font/yoster.ttf', 20)
 
-y=5
-lose=100
-start=False
+y=2
+lose=40
+start=0
 run=True
-
+vel=2
+velo=5
 
 mes=font1.render("Game Ended", False, 'white')
 
 
 while run:
-
+    
     for event in pygame.event.get():
             if event.type==pygame.QUIT:
                 run=False
+                pygame.display.update()
                 pygame.quit()
                 sys.exit()
-            if (event.type==pygame.MOUSEBUTTONDOWN):
-                if GameElements.exitbutton()[0].collidepoint(mousepos):
-                    pygame.time.wait(1000)
-                    pygame.quit()
-                    sys.exit() 
 
 
-    screen.blit(GameElements.background()[0], GameElements.background()[1])
+    background.right-=1
+    if background.right<=1000:
+        background.left=0
+    screen.blit(background2, background)
 
 
     pygame.mouse.set_visible(False)
+
+
+    pillars = [pillarupp, pillarupp2, pillarupp3, pillarupp4,
+            pillardownn, pillardownn2, pillardownn3, pillardownn4]
+    current_collision=False
+
+    for p in pillars[0:4]:
+        p.left-=1.4
+        if p.right<=0:
+            p.left=1000
+        screen.blit(pillarup1, p)
+
+    for p in pillars[4:8]:
+        p.left-=1.4
+        if p.right<=0:
+            p.left=1000
+        screen.blit(pillardown1, p)
     
-
     
-    mes=font1.render("Welcome! Let's save the Witch!", False, 'white') 
-    sec=pygame.time.get_ticks()
+    mes=font1.render("Save the Witch!", False, 'goldenrod2') 
+    
+    if start==0:
+        
+        mess=font1.render("Click Play to start", False, 'goldenrod2')
+        by=font.render("Game By Chaitali Ingle", False, 'goldenrod2')
+        screen.blit(by, (370, 450))
+        screen.blit(mess, (250,50))
+        screen.blit(playbut2,playbut3)
+        screen.blit(GameElements.cursor()[0], GameElements.cursor()[1] )
 
-
-    if not start:
-
-        screen.blit(mes, (100, 150))
-  
-        for i in range (3, 0, -1):
+        pygame.display.update()
+        for events in pygame.event.get():
             
-            seconds=font1.render(f'{i}', False, 'white')
-            screen.blit(seconds, (450,250))
-            pygame.time.wait(500)
+            if playbut3.collidepoint(GameElements.mouse()[0], GameElements.mouse()[1]):
+                # pygame.display.update()
+                screen.blit(playp1,playp)
+                screen.blit(GameElements.cursor()[0], GameElements.cursor()[1] )
+                pygame.display.update()
+                if events.type==pygame.MOUSEBUTTONDOWN:
+                
+                    
+                    pygame.display.update()
+                    start+=1
+
+    elif start==1:
+
+        screen.blit(mes, (300, 150))
+
+        for i in range (3, -1, -1):
+            
+            seconds=font1.render(str(int(i)), False, 'goldenrod2')
+            screen.blit(seconds, (490,250))
+            # pygame.display.update()
+            # screen.blit(GameElements.cursor()[0], GameElements.cursor()[1] )
+            pygame.time.wait(1000)
             pygame.display.update()
-            if seconds==1:
+            if i==0:
+                start+=1
                 break
-           
+      
             
     else:
-
-        screen.blit(GameElements.seconds()[0], (800,15))
+        
+        sec=pygame.time.get_ticks()
+        screen.blit(GameElements.seconds(), (800,15))
 
         screen.blit(GameElements.exitbutton()[1], GameElements.exitbutton()[2])
-
-        pillars = [pillarupp, pillarupp2, pillarupp3, pillarupp4,
-                pillardownn, pillardownn2, pillardownn3, pillardownn4]
-        current_collision=False
-
-        for p in pillars[0:4]:
-            p.left-=4
-            if p.right<=0:
-                p.left=1000
-            screen.blit(pillarup1, p)
-
-        for p in pillars[4:8]:
-            p.left-=4
-            if p.right<=0:
-                p.left=1000
-            screen.blit(pillardown1, p)
-
-    
-        screen.blit(GameElements.cursor()[0], GameElements.cursor()[1] )
+        for event in pygame.event.get():
+            if event.type==pygame.MOUSEBUTTONDOWN:
+                if GameElements.exitbutton()[0].collidepoint(GameElements.mouse()[0], GameElements.mouse()[1]):
+                 
+                    screen.blit(over1, over)
+                    pygame.display.update()
+                    pygame.time.wait(1000)
+                    # pygame.qu
+                    sys.exit()
 
         
         key=pygame.key.get_pressed()
         if key[pygame.K_w] or key[pygame.K_UP]:
             witch.centery-=2
         if key[pygame.K_s] or key[pygame.K_DOWN]:
-            witch.centery+=14
+            witch.centery+=velo
         
 
         
         if any(witch.colliderect(p) for p in pillars):
             current_collision=True
-
+            witch.left-=0.5
         
         if current_collision and not collided_last_frame:
             witch.left-=1
@@ -190,7 +248,7 @@ while run:
         collided_last_frame=current_collision
 
         #witch
-        witch.left+=5
+        witch.left+=vel
         witch.top-=y
         if witch.left>=1000:
             witch.left=-witch.width
@@ -201,24 +259,51 @@ while run:
         if witch.top<=0 or witch.bottom>=500:
             y*=-1
         
-        name=font.render(f"Save the Witch!", False, 'darkslategray')
-        screen.blit(name, (430, 15))
+        name=font.render(f"Save the Witch!", False, 'goldenrod4')
+        screen.blit(name, (420, 15))
 
 
-        message2=font.render(f"Health: {int(lose)}", False, 'darkslategray')
-        screen.blit(message2, (100, 20))
+        # message2=font.render(f"Health: {int(lose)}", False, 'goldenrod4')
+        # screen.blit(message2, (100, 20))
+        screen.blit(GameElements.cursor()[0], GameElements.cursor()[1] )
+
+
+        if lose>0 and lose<=10:
+            vel=3.8
+            y=5
+            velo=8
+            screen.blit(heart21, heart2)
+            pygame.display.update()
+
+        elif lose>10 and lose<=20:
+            vel=3.2
+            y=4
+            velo=6.9
+            screen.blit(heart31, heart3)
+            pygame.display.update()
+
+        elif lose>20 and lose<=30:
+            vel=2.6
+            y=3
+            velo=5.5
+            screen.blit(heart41, heart4)
+            pygame.display.update()
+
+        elif lose>30 and lose<=40:
+            screen.blit(heart51, heart5)
 
 
         if lose<=0:
-                message1=font1.render("Game Over!", False, 'white')
-                screen.blit(message1, (370, 240))
+                screen.blit(heart11, heart1)
+                # message1=font1.render("Amazing!", False, 'white')
+                screen.blit(over1, over)
                 pygame.display.update()
                 pygame.time.wait(2000)
                 run = False
 
 
         pygame.display.update()
-        clock.tick(1000)
+        clock.tick(60)
 
 
 pygame.quit()
