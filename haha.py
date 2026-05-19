@@ -1,5 +1,7 @@
 import pygame
 import sys
+import os 
+
 
 screen=pygame.display.set_mode((1000,500))
 clock=pygame.time.Clock()
@@ -7,6 +9,8 @@ pygame.display.set_caption("Flappy Witch")
 
 pygame.init()
 pygame.mixer.init()
+start_time = 0 
+survival_time = 0
 
 class GameElements:
 
@@ -26,10 +30,18 @@ class GameElements:
         pos=(mx,my)
         return pos
     
-    def seconds():
-        secs= int(pygame.time.get_ticks()/1000)
-        secs1=font3.render(f"Seconds: {secs}", False, 'goldenrod4')
-        return secs1
+    def seconds(start_time):
+        current_time = pygame.time.get_ticks()
+        
+        if start_time == 0:
+            start_time = current_time
+        
+        
+        survival_time = (current_time - start_time) / 1000
+   
+        score_text = font.render(f"Time: {int(survival_time)}s", False, 'goldenrod4')
+        # screen.blit(score_text, (800, 15))
+        return score_text
     
     def cursor():
         cursor1=pygame.image.load('char/cursor.png').convert_alpha()
@@ -51,6 +63,23 @@ class GameElements:
         text_rect = text_surf.get_rect(center=button.center)
         return button, text_surf, text_rect
     
+    def load_highscore():
+        if os.path.exists("highscore.txt"):
+            try:
+                with open("highscore.txt", "r") as f:
+                    return int(f.read().strip())
+            except:
+                return 0
+        return 0
+
+    def save_highscore(score):
+        current_best = GameElements.load_highscore()
+        if score > current_best:
+            with open("highscore.txt", "w") as f:
+                f.write(str(score))
+            return True # Saved new record
+        return False 
+        
 
 
 background1=pygame.image.load('char/final.png')
@@ -108,8 +137,6 @@ zero=zero2.get_rect(topleft=(470, 240))
 
 GameElements.bgmusic()
 
-# mousepos=pygame.mouse.get_pos()
-# mx,my=mousepos
 
 collided_last_frame=False
 
@@ -121,33 +148,37 @@ witch=witch2.get_rect(topleft=(-55,350))
 pillarup=pygame.image.load('char/uppipe.png').convert_alpha()
 pillarup1=pygame.transform.scale(pillarup, (30,300))
 
-pillarupp=pillarup1.get_rect(topleft=(500,310))
-pillarupp2=pillarup1.get_rect(topleft=(250,350))
-pillarupp3=pillarup1.get_rect(topleft=(730,300))
-pillarupp4=pillarup1.get_rect(topleft=(970,400))
+pillarupp=pillarup1.get_rect(topleft=(333,380))
+pillarupp2=pillarup1.get_rect(topleft=(1000,350))
+pillarupp3=pillarup1.get_rect(topleft=(667,350))
+# pillarupp4=pillarup1.get_rect(topleft=(857,400))
 
 
 pillardown=pygame.image.load('char/downpipe.png').convert_alpha()
 pillardown1=pygame.transform.scale(pillardown, (30,300))
 
-pillardownn=pillardown1.get_rect(topleft=(100,0))
-pillardownn2=pillardown1.get_rect(topleft=(350,-50))
-pillardownn3=pillardown1.get_rect(topleft=(900,0))
-pillardownn4=pillardown1.get_rect(topleft=(600,-110))
+pillardownn=pillardown1.get_rect(topleft=(167,-20))
+# pillardownn2=pillardown1.get_rect(topleft=(1000,-50))
+pillardownn3=pillardown1.get_rect(topleft=(500,-30))
+pillardownn4=pillardown1.get_rect(topleft=(834,-110))
 
 font=pygame.font.Font('font/yoster.ttf', 20)
 font1=pygame.font.Font('font/yoster.ttf', 50)
 font3=pygame.font.Font('font/yoster.ttf', 20)
-
+back_vel=2
 y=2
-lose=40
+lose=4
 start=0
 run=True
+
 vel=2
 velo=5
-
+i=3
 mes=font1.render("Game Ended", False, 'white')
+best_score = GameElements.load_highscore()
 
+countdown_images = [three32, two22, one12] 
+countdown_rects = [three, two, one]
 
 while run:
     
@@ -159,7 +190,7 @@ while run:
                 sys.exit()
 
 
-    background.right-=1
+    background.right-=back_vel
     if background.right<=1000:
         background.left=0
     screen.blit(background2, background)
@@ -168,17 +199,17 @@ while run:
     pygame.mouse.set_visible(False)
     
 
-    pillars = [pillarupp, pillarupp2, pillarupp3, pillarupp4,
-            pillardownn, pillardownn2, pillardownn3, pillardownn4]
+    pillars = [pillarupp, pillarupp3, pillarupp2,
+            pillardownn, pillardownn3, pillardownn4]
     current_collision=False
 
-    for p in pillars[0:4]:
+    for p in pillars[0:3]:
         p.left-=1.4
         if p.right<=0:
             p.left=1000
         screen.blit(pillarup1, p)
 
-    for p in pillars[4:8]:
+    for p in pillars[3:6]:
         p.left-=1.4
         if p.right<=0:
             p.left=1000
@@ -188,6 +219,8 @@ while run:
     mes=font1.render("Save the Witch!", False, 'goldenrod2') 
     
     if start==0:
+        best_text = font.render(f"Best Score: {best_score}s", False, 'goldenrod2')
+        screen.blit(best_text, (400, 120))
         
         mess=font1.render("Click Play to start", False, 'goldenrod2')
         by=font.render("Game By Chaitali Ingle", False, 'goldenrod2')
@@ -200,7 +233,7 @@ while run:
         for events in pygame.event.get():
             
             if playbut3.collidepoint(GameElements.mouse()[0], GameElements.mouse()[1]):
-                # pygame.display.update()
+              
                 screen.blit(playp1,playp)
                 screen.blit(GameElements.cursor()[0], GameElements.cursor()[1] )
                 pygame.display.update()
@@ -214,35 +247,38 @@ while run:
 
         screen.blit(mes, (300, 150))
 
-        for i in range (1, 5):
-            screen.blit(GameElements.cursor()[0], GameElements.cursor()[1] )
-            
-            if i==4:
-                start+=1
-                
-            if i==1:
-                screen.blit(one12,one)
-            
-                
-            if i==2:
-                screen.blit(two22,two)
-               
-                
-            if i==3:
-                screen.blit(three32,three)
+        
+        screen.blit(GameElements.cursor()[0], GameElements.cursor()[1] )
 
-            pygame.time.wait(1000)
-                
-
+        for i in range(1, 4, 1): 
+        
+            index = 3 - i 
+            screen.blit(countdown_images[index], countdown_rects[index])
+            
             pygame.display.update()
+            
+        
+            pygame.time.wait(1000)
+
+        else:
+            start+=1
+            
                 
 
       
             
     else:
         
-        sec=pygame.time.get_ticks()
-        screen.blit(GameElements.seconds(), (800,15))
+        current_time = pygame.time.get_ticks()
+        
+        if start_time == 0:
+            start_time = current_time
+        
+        
+        survival_time = (current_time - start_time) / 1000
+   
+        score_text = font.render(f"Time: {int(survival_time)}s", False, 'goldenrod4')
+        screen.blit(score_text, (800,15))
 
         screen.blit(GameElements.exitbutton()[1], GameElements.exitbutton()[2])
         for event in pygame.event.get():
@@ -259,14 +295,20 @@ while run:
         key=pygame.key.get_pressed()
         if key[pygame.K_w] or key[pygame.K_UP]:
             witch.centery-=2
+            # if witch.top<=0 or witch.bottom>=500:
+            #     y*=-1
         if key[pygame.K_s] or key[pygame.K_DOWN]:
             witch.centery+=velo
+            # if witch.top<=0 or witch.bottom>=500:
+            #     y*=-1
         
+
 
         
         if any(witch.colliderect(p) for p in pillars):
             current_collision=True
             witch.left-=0.5
+
         
         if current_collision and not collided_last_frame:
             witch.left-=1
@@ -280,12 +322,13 @@ while run:
         witch.top-=y
         if witch.left>=1000:
             witch.left=-witch.width
+
             
         screen.blit(witch2, witch)
 
-        
         if witch.top<=0 or witch.bottom>=500:
             y*=-1
+
         
         name=font.render(f"Save the Witch!", False, 'goldenrod4')
         screen.blit(name, (420, 15))
@@ -296,38 +339,44 @@ while run:
         screen.blit(GameElements.cursor()[0], GameElements.cursor()[1] )
 
 
-        if lose>0 and lose<=10:
-            vel=3.8
-            y=5
-            velo=8.2
+        if lose>0 and lose<=1:
+            vel=3.5
+            y=3.6
+            velo=7.2
+            back_vel=3.5
             screen.blit(heart21, heart2)
             pygame.display.update()
 
-        elif lose>10 and lose<=20:
-            vel=3.2
-            y=4
-            velo=7.2
+        elif lose>1 and lose<=2:
+            vel=3
+            y=3
+            velo=6.4
+            back_vel=3
             screen.blit(heart31, heart3)
             pygame.display.update()
 
-        elif lose>20 and lose<=30:
+        elif lose>2 and lose<=3:
             vel=2.6
-            y=3
+            y=2.5
             velo=5.5
+            back_vel=2.5
             screen.blit(heart41, heart4)
             pygame.display.update()
 
-        elif lose>30 and lose<=40:
+        elif lose>3 and lose<=4:
             screen.blit(heart51, heart5)
 
 
-        if lose<=0:
-                screen.blit(heart11, heart1)
-                # message1=font1.render("Amazing!", False, 'white')
-                screen.blit(over1, over)
-                pygame.display.update()
-                pygame.time.wait(2000)
-                run = False
+        elif lose<=0:
+            if survival_time > best_score:
+                GameElements.save_highscore(int(survival_time))
+                best_score = int(survival_time)
+            screen.blit(heart11, heart1)
+            # message1=font1.render("Amazing!", False, 'white')
+            screen.blit(over1, over)
+            pygame.display.update()
+            pygame.time.wait(2000)
+            run = False
 
 
         pygame.display.update()
