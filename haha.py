@@ -89,11 +89,27 @@ heart52=pygame.image.load('char/heart5.png').convert_alpha()
 heart51=pygame.transform.scale(heart52, (200,50))
 heart5=heart51.get_rect(topleft=(50,5))
 
+one11=pygame.image.load('char/1.png').convert_alpha()
+one12=pygame.transform.scale(one11, (31,72))
+one=one12.get_rect(topleft=(485, 240))
+
+two21=pygame.image.load('char/2.png').convert_alpha()
+two22=pygame.transform.scale(two21, (57,72))
+two=two22.get_rect(topleft=(470, 240))
+
+three31=pygame.image.load('char/3.png').convert_alpha()
+three32=pygame.transform.scale(three31, (57,73))
+three=three32.get_rect(topleft=(470, 240))
+
+zero1=pygame.image.load('char/0.png').convert_alpha()
+zero2=pygame.transform.scale(zero1, (57,73))
+zero=zero2.get_rect(topleft=(470, 240))
+
 
 GameElements.bgmusic()
 
-mousepos=pygame.mouse.get_pos()
-mx,my=mousepos
+# mousepos=pygame.mouse.get_pos()
+# mx,my=mousepos
 
 collided_last_frame=False
 
@@ -138,7 +154,7 @@ while run:
     for event in pygame.event.get():
             if event.type==pygame.QUIT:
                 run=False
-                pygame.display.update()
+                # pygame.display.update()
                 pygame.quit()
                 sys.exit()
 
@@ -150,7 +166,7 @@ while run:
 
 
     pygame.mouse.set_visible(False)
-
+    
 
     pillars = [pillarupp, pillarupp2, pillarupp3, pillarupp4,
             pillardownn, pillardownn2, pillardownn3, pillardownn4]
@@ -198,17 +214,29 @@ while run:
 
         screen.blit(mes, (300, 150))
 
-        for i in range (3, -1, -1):
+        for i in range (1, 5):
+            screen.blit(GameElements.cursor()[0], GameElements.cursor()[1] )
             
-            seconds=font1.render(str(int(i)), False, 'goldenrod2')
-            screen.blit(seconds, (490,250))
-            # pygame.display.update()
-            # screen.blit(GameElements.cursor()[0], GameElements.cursor()[1] )
-            pygame.time.wait(1000)
-            pygame.display.update()
-            if i==0:
+            if i==4:
                 start+=1
-                break
+                
+            if i==1:
+                screen.blit(one12,one)
+            
+                
+            if i==2:
+                screen.blit(two22,two)
+               
+                
+            if i==3:
+                screen.blit(three32,three)
+
+            pygame.time.wait(1000)
+                
+
+            pygame.display.update()
+                
+
       
             
     else:
@@ -271,14 +299,14 @@ while run:
         if lose>0 and lose<=10:
             vel=3.8
             y=5
-            velo=8
+            velo=8.2
             screen.blit(heart21, heart2)
             pygame.display.update()
 
         elif lose>10 and lose<=20:
             vel=3.2
             y=4
-            velo=6.9
+            velo=7.2
             screen.blit(heart31, heart3)
             pygame.display.update()
 
