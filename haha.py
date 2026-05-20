@@ -98,9 +98,6 @@ text6=font3.render(text1[5], False, 'goldenrod2')
 text7=font3.render(text1[6], False, 'yellow')
 
 
-        
-
-
 background1=pygame.image.load('char/final.png')
 background2=pygame.transform.scale(background1,(3000,500))
 background=background2.get_rect(topleft=(0,0))
