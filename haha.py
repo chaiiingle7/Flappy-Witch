@@ -79,6 +79,25 @@ class GameElements:
                 f.write(str(score))
             return True # Saved new record
         return False 
+    
+
+font=pygame.font.Font('font/yoster.ttf', 20)
+font1=pygame.font.Font('font/yoster.ttf', 50)
+font3=pygame.font.Font('font/yoster.ttf', 15)
+    
+
+text1="Fly through the pipes coming in all through your way.\nThe Witch flies in right and drifts upwards.\nPress 'S' or 'Key Down' button for flying downwards,\nto avoid colliding the pipes.\nYou have 4 lives, with each collision you lose one \nwhile the speed of the witch increases.\nAll the best!".split('\n')
+
+
+text=font3.render(text1[0], False, 'yellow')
+text2=font3.render(text1[1], False, 'goldenrod2')
+text3=font3.render(text1[2], False, 'gold')
+text4=font3.render(text1[3], False, 'yellow')
+text5=font3.render(text1[4], False, 'gold')
+text6=font3.render(text1[5], False, 'goldenrod2')
+text7=font3.render(text1[6], False, 'yellow')
+
+
         
 
 
@@ -162,9 +181,7 @@ pillardownn=pillardown1.get_rect(topleft=(167,-20))
 pillardownn3=pillardown1.get_rect(topleft=(500,-30))
 pillardownn4=pillardown1.get_rect(topleft=(834,-110))
 
-font=pygame.font.Font('font/yoster.ttf', 20)
-font1=pygame.font.Font('font/yoster.ttf', 50)
-font3=pygame.font.Font('font/yoster.ttf', 20)
+
 back_vel=2
 y=2
 lose=4
@@ -174,7 +191,8 @@ run=True
 vel=2
 velo=5
 i=3
-mes=font1.render("Game Ended", False, 'white')
+
+
 best_score = GameElements.load_highscore()
 
 countdown_images = [three32, two22, one12] 
@@ -219,13 +237,21 @@ while run:
     mes=font1.render("Save the Witch!", False, 'goldenrod2') 
     
     if start==0:
+        screen.blit(text, (250+40,230+100))
+        screen.blit(text2, (250+70,230+120))
+        screen.blit(text3, (250+40,230+140))
+        screen.blit(text4, (250+130,230+160))
+        screen.blit(text5, (250+50,230+180))
+        screen.blit(text6, (250+80,230+200))
+        screen.blit(text7, (250+180,230+220))
+
         best_text = font.render(f"Best Score: {best_score}s", False, 'goldenrod2')
-        screen.blit(best_text, (400, 120))
+        screen.blit(best_text, (400, 140))
         
         mess=font1.render("Click Play to start", False, 'goldenrod2')
         by=font.render("Game By Chaitali Ingle", False, 'goldenrod2')
-        screen.blit(by, (370, 450))
-        screen.blit(mess, (250,50))
+        screen.blit(by, (370, 20))
+        screen.blit(mess, (250,70))
         screen.blit(playbut2,playbut3)
         screen.blit(GameElements.cursor()[0], GameElements.cursor()[1] )
 
@@ -244,6 +270,8 @@ while run:
                     start+=1
 
     elif start==1:
+        # screen.blit(witch2, witch)
+        
 
         screen.blit(mes, (300, 150))
 
