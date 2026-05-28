@@ -1,6 +1,6 @@
 import pygame
 import sys
-import os 
+import os
 
 def Flappy():
     screen=pygame.display.set_mode((1000,500))
@@ -31,31 +31,31 @@ def Flappy():
             mx,my=  mousepos
             pos=(mx,my)
             return pos
-        
+
         def seconds(start_time):
             current_time = pygame.time.get_ticks()
-            
+
             if start_time == 0:
                 start_time = current_time
-            
-            
+
+
             survival_time = (current_time - start_time) / 1000
-    
+
             score_text = font.render(f"Time: {int(survival_time)}s", False, 'goldenrod4')
             # screen.blit(score_text, (800, 15))
             return score_text
-        
+
         def cursor():
             cursor1=pygame.image.load('char/cursor.png').convert_alpha()
             cursor2=pygame.transform.scale(cursor1, (20,30))
             cursor=cursor2.get_rect(topleft=(GameElements.mouse()))
             return cursor2, cursor
-        
+
         def exitbutton():
 
             color_not='goldenrod3'
             color_umm='goldenrod4'
-        
+
 
             button=pygame.Rect(900,450,70,30)
             color=color_umm if button.collidepoint(GameElements.mouse()) else color_not
@@ -64,7 +64,7 @@ def Flappy():
             text_surf = font.render("exit", False, 'WHITE')
             text_rect = text_surf.get_rect(center=button.center)
             return button, text_surf, text_rect
-        
+
         def load_highscore():
             if os.path.exists("highscore.txt"):
                 try:
@@ -80,13 +80,13 @@ def Flappy():
                 with open("highscore.txt", "w") as f:
                     f.write(str(score))
                 return True # Saved new record
-            return False 
-        
+            return False
+
 
     font=pygame.font.Font('font/yoster.ttf', 20)
     font1=pygame.font.Font('font/yoster.ttf', 50)
     font3=pygame.font.Font('font/yoster.ttf', 15)
-        
+
 
     text1="Fly through the pipes coming in all through your way.\nThe Witch flies in right and drifts upwards.\nPress 'S' or 'Key Down' button for flying downwards,\nto avoid colliding the pipes.\nYou have 4 lives, with each collision you lose one \nwhile the speed of the witch increases.\nAll the best!".split('\n')
 
@@ -194,11 +194,11 @@ def Flappy():
 
     best_score = GameElements.load_highscore()
 
-    countdown_images = [three32, two22, one12] 
+    countdown_images = [three32, two22, one12]
     countdown_rects = [three, two, one]
 
     while run:
-        
+
         for event in pygame.event.get():
                 if event.type==pygame.QUIT:
                     run=False
@@ -214,7 +214,7 @@ def Flappy():
 
 
         pygame.mouse.set_visible(False)
-        
+
 
         pillars = [pillarupp, pillarupp3, pillarupp2,
                 pillardownn, pillardownn3, pillardownn4]
@@ -231,10 +231,10 @@ def Flappy():
             if p.right<=0:
                 p.left=1000
             screen.blit(pillardown1, p)
-        
-        
-        mes=font1.render("Save the Witch!", False, 'goldenrod2') 
-        
+
+
+        mes=font1.render("Save the Witch!", False, 'goldenrod2')
+
         if start==0:
             screen.blit(text, (250+40,230+100))
             screen.blit(text2, (250+70,230+120))
@@ -246,7 +246,7 @@ def Flappy():
 
             best_text = font.render(f"Best Score: {best_score}s", False, 'goldenrod2')
             screen.blit(best_text, (400, 140))
-            
+
             mess=font1.render("Click Play to start", False, 'goldenrod2')
             by=font.render("Game By Chaitali Ingle", False, 'goldenrod2')
             screen.blit(by, (370, 20))
@@ -256,54 +256,49 @@ def Flappy():
 
             pygame.display.update()
             for events in pygame.event.get():
-                
+
                 if playbut3.collidepoint(GameElements.mouse()[0], GameElements.mouse()[1]):
-                
+
                     screen.blit(playp1,playp)
                     screen.blit(GameElements.cursor()[0], GameElements.cursor()[1] )
                     pygame.display.update()
                     if events.type==pygame.MOUSEBUTTONDOWN:
-                    
-                        
+
+
                         pygame.display.update()
                         start+=1
 
         elif start==1:
             # screen.blit(witch2, witch)
-            
+
 
             screen.blit(mes, (300, 150))
 
-            
+
             screen.blit(GameElements.cursor()[0], GameElements.cursor()[1] )
 
-            for i in range(1, 4, 1): 
-            
-                index = 3 - i 
+            for i in range(1, 4, 1):
+
+                index = 3 - i
                 screen.blit(countdown_images[index], countdown_rects[index])
-                
+
                 pygame.display.update()
-                
-            
+
+
                 pygame.time.wait(1000)
 
-            else:
-                start+=1
-                
-                    
+            else: start+=1
 
-        
-                
         else:
-            
+
             current_time = pygame.time.get_ticks()
-            
+
             if start_time == 0:
                 start_time = current_time
-            
-            
+
+
             survival_time = (current_time - start_time) / 1000
-    
+
             score_text = font.render(f"Time: {int(survival_time)}s", False, 'goldenrod4')
             screen.blit(score_text, (800,15))
 
@@ -311,14 +306,13 @@ def Flappy():
             for event in pygame.event.get():
                 if event.type==pygame.MOUSEBUTTONDOWN:
                     if GameElements.exitbutton()[0].collidepoint(GameElements.mouse()[0], GameElements.mouse()[1]):
-                    
+
                         screen.blit(over1, over)
                         pygame.display.update()
                         pygame.time.wait(1000)
-                        # pygame.qu
                         sys.exit()
 
-            
+
             key=pygame.key.get_pressed()
             if key[pygame.K_w] or key[pygame.K_UP]:
                 witch.centery-=2
@@ -328,20 +322,20 @@ def Flappy():
                 witch.centery+=velo
                 # if witch.top<=0 or witch.bottom>=500:
                 #     y*=-1
-            
 
 
-            
+
+
             if any(witch.colliderect(p) for p in pillars):
                 current_collision=True
                 witch.left-=0.5
 
-            
+
             if current_collision and not collided_last_frame:
                 witch.left-=1
                 lose-=1
                 GameElements.hit()
-                
+
             collided_last_frame=current_collision
 
             #witch
@@ -350,13 +344,13 @@ def Flappy():
             if witch.left>=1000:
                 witch.left=-witch.width
 
-                
+
             screen.blit(witch2, witch)
 
             if witch.top<=0 or witch.bottom>=500:
                 y*=-1
 
-            
+
             name=font.render(f"Save the Witch!", False, 'goldenrod4')
             screen.blit(name, (420, 15))
 
